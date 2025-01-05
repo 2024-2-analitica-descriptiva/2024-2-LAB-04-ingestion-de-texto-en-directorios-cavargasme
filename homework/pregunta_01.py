@@ -74,7 +74,6 @@ def pregunta_01():
 
 
     """
-
     with zipfile.ZipFile('files/input.zip', 'r') as zip_ref:
         zip_ref.extractall('files')
 
@@ -90,6 +89,11 @@ def pregunta_01():
                 phrase = file.read().strip()
                 data.append([phrase, target])
 
+        target = 'neutral'
+        for filepath in glob.glob(f"{path_input}/{target}/*"):
+            with open(filepath, 'r', encoding='utf-8') as file:
+                phrase = file.read().strip()
+                data.append([phrase, target])
 
         target = 'positive'
         for filepath in glob.glob(f"{path_input}/{target}/*"):
