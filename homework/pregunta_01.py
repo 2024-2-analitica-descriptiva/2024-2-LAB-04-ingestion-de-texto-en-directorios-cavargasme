@@ -4,7 +4,10 @@
 """
 Escriba el codigo que ejecute la accion solicitada en cada pregunta.
 """
-
+import zipfile
+import os
+import pandas as pd
+import glob
 
 def pregunta_01():
     """
@@ -71,3 +74,34 @@ def pregunta_01():
 
 
     """
+
+    with zipfile.ZipFile('files/input.zip', 'r') as zip_ref:
+        zip_ref.extractall('files')
+
+    os.makedirs('files/output', exist_ok=True)
+
+
+    def generator(path_input, name_ouput):
+        data = [['phrase', 'target']]
+        
+        target = 'negative'
+        for filepath in glob.glob(f"{path_input}/{target}/*"):
+            with open(filepath, 'r', encoding='utf-8') as file:
+                phrase = file.read().strip()
+                data.append([phrase, target])
+
+
+        target = 'positive'
+        for filepath in glob.glob(f"{path_input}/{target}/*"):
+            with open(filepath, 'r', encoding='utf-8') as file:
+                phrase = file.read().strip()
+                data.append([phrase, target])
+        
+        data = pd.DataFrame(data[1:], columns = data[0])
+        data.to_csv('files/output/' + name_ouput, index=False)
+        
+        return pd.DataFrame(data)
+
+    generator("files/input/test", "test_dataset.csv")
+    generator("files/input/train", "train_dataset.csv")
+
